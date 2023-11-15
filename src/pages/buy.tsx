@@ -1,5 +1,12 @@
-import BuyTokens from "@/components/BuyTokens"
+import { useState } from "react";
 
-export default function Buy() {
-    return <BuyTokens />
+import BuyTokens from "@/components/BuyTokens";
+
+type Props = {
+    counter: number
+    add: Function
+}
+
+export default function Buy({ counter, add }: Props) {
+    return <BuyTokens counter={counter} add={add}/>
 }

@@ -8,6 +8,8 @@ import { goerli } from 'wagmi/chains'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 import { InjectedConnector } from 'wagmi/connectors/injected'
+
+import { useState } from "react";
  
 const { chains, publicClient } = configureChains(
   [goerli],
@@ -21,11 +23,13 @@ const config = createConfig({
 })
 
 export default function App({ Component, pageProps }: AppProps) {
+  const [count, setcount] = useState(0);
+  const add = () => setcount((prev) => prev + 1);
   return(
   <WagmiConfig config={config}>
-  <Layout>
-      <Component {...pageProps} />
-  </Layout>
+    <Layout>
+        <Component {...pageProps} counter={count} add={add}/>
+    </Layout>
   </WagmiConfig>
   )
 }
