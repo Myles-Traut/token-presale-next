@@ -18,7 +18,7 @@ export default function Navbar() {
               >Home</Link>
             <Link
               href="/buy" className="text-gray-900 px-5 hover:text-indigo-800"
-              >Buy Tokens</Link>
+              >Buy</Link>
           </div>
           <div className="flex absolute inset-y-0 right-0 space-x-1 my-4 mr-8 w-2/12 items-center">
             <Profile />

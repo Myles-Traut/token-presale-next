@@ -7,7 +7,7 @@ type Props = {
 
 export default function BuyTokens({ counter, add }: Props) {
 
-    const { isConnected } = useAccount();
+    const { address, isConnected } = useAccount();
 
     return (
         <>
@@ -15,6 +15,9 @@ export default function BuyTokens({ counter, add }: Props) {
                 <h1 className="text-center text-6xl my-8">Buy Tokens</h1>
             </div>
             <div>
+            <h2 className="flex relative text-lg text-white text-center items-center justify-center mb-8 px-4">{isConnected ? `Connected to ${address}` : "You Are Not Connected"}</h2>
+            </div>
+            <div className="mt-5">
                 <h2 className="mt-5 mb-5 text-center text-2xl">Tokens bought: {counter}</h2>
             </div>
             <div className="flex relative">
