@@ -1,13 +1,34 @@
-import { useAccount } from 'wagmi'
+import { useAccount, useContractRead } from 'wagmi';
+import { tokenSaleAbi } from "../../abis/TokenPresale"
+import { ReactNode } from 'react';
 
 type Props = {
     counter: number
     add: Function
 }
 
+type Args = {
+    data: string | number | undefined
+    isError: boolean
+    isLoading: boolean
+}
+
 export default function BuyTokens({ counter, add }: Props) {
 
     const { address, isConnected } = useAccount();
+
+    
+    const { data, isError, isLoading }: Args = useContractRead({
+        address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
+        abi: tokenSaleAbi,
+        functionName: 'userHubBalance',
+        args: ['0xe6ba5Bb7238e7C38C7c5Ff5F0dA2223C50A466f8'],
+        suspense: true,
+        onSuccess(data) {
+            console.log('Success', data)},
+      });
+    const output = data?.toString();
+    
 
     return (
         <>
@@ -18,7 +39,9 @@ export default function BuyTokens({ counter, add }: Props) {
             <h2 className="flex relative text-lg text-white text-center items-center justify-center mb-8 px-4">{isConnected ? `Connected to ${address}` : "You Are Not Connected"}</h2>
             </div>
             <div className="mt-5">
-                <h2 className="mt-5 mb-5 text-center text-2xl">Tokens bought: {counter}</h2>
+                {isConnected ? 
+                <h2 className="mt-5 mb-5 text-center text-white text-2xl">Hub Tokens bought: {output}</h2> :
+                <h2 className="mt-5 mb-5 text-center text-white text-2xl">Please connect Wallet</h2>}
             </div>
             <div className="flex relative">
                 <div className="flex absolute bg-gray-50 text-center justify-center mt-8 w-screen">
