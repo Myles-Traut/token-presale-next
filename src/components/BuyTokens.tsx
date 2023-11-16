@@ -1,35 +1,53 @@
-import { useAccount } from 'wagmi';
-import TokensBought from './TokensBought';
+import {
+    usePrepareContractWrite, 
+    useContractWrite, 
+    useWaitForTransaction } from 'wagmi';
+
+import { tokenSaleAbi } from "../../abis/TokenPresale"
+
+import { parseEther } from 'viem';
 
 type Props = {
-    counter: number
-    add: Function
+    address: `0x${string}` | undefined,
+    isConnected: boolean,
 }
 
-export default function BuyTokens({ counter, add }: Props) {
-
-    const { address, isConnected } = useAccount();
+export default function BuyTokens({ address, isConnected }: Props) {
     
+    // cd10d20c85e372c8697ae241a34de82d
+    // https://api.studio.thegraph.com/query/53386/token-ps-final/version/latest
+    // const SelectLabel: (label: string) => string = (label) => 
+
+    const { config } = usePrepareContractWrite({
+        address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
+        abi: tokenSaleAbi,
+        functionName: 'buyHub',
+        args: [address],
+        value: parseEther('0.001'),
+    });
+    const { data, write } = useContractWrite(config);
+
+    const { isLoading, isSuccess } = useWaitForTransaction({
+        hash: data?.hash,
+    });
+
     return (
         <>
-            <div>
-                <h1 className="text-center text-6xl my-8">Buy Tokens</h1>
-            </div>
-            <div>
-            <h2 className="flex relative text-lg text-white text-center items-center justify-center mb-8 px-4">{isConnected ? `Connected to ${address}` : "You Are Not Connected"}</h2>
-            </div>
-            <div className="mt-5">
-                {isConnected ? 
-                <h2 className="mt-5 mb-5 text-center text-white text-2xl ">Claimable Hub Token Balance: <TokensBought address={address}/></h2> :
-                <h2 className="mt-5 mb-5 text-center text-white text-2xl">Please connect Wallet</h2>}
-            </div>
             <div className="flex relative">
                 <div className="flex absolute bg-gray-50 text-center justify-center mt-8 w-screen">
-                <button disabled={!isConnected}
-                    className={isConnected ? 
+                <button disabled={isLoading || !isConnected }
+                    className={isConnected && !isLoading ? 
                         "h-10 px-5 m-2 text-green-100 transition-colors duration-150 bg-green-700 rounded-lg focus:shadow-outline hover:bg-green-800" : 
                         "h-10 px-5 m-2 text-gray-700 transition-colors duration-150 bg-gray-400 rounded-lg focus:shadow-outline hover:bg-gray-500"}
-                    onClick={() => {add()}}>Buy Tokens</button>
+                    onClick={() => write?.()}>{isLoading ? 'Transaction in progress' : 'Buy HUB'}</button>
+                {isSuccess && (
+                    <div className="text-black">
+                        Successfully purchased HUB!
+                        <div>
+                            <a href={`https://goerli.etherscan.io/tx/${data?.hash}`}>Etherscan</a>
+                        </div>
+                    </div>
+                )}
                 </div>
             </div>
         </>
