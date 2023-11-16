@@ -16,15 +16,15 @@ type Args = {
 }
 
 export default function Buy({ counter, add }: Props) {
-    const { data, isError, isLoading }: Args = useContractRead({
-              address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
-              abi: tokenSaleAbi,
-              functionName: 'owner',
-              suspense: true
-            });
+    // const { data, isError, isLoading }: Args = useContractRead({
+    //           address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
+    //           abi: tokenSaleAbi,
+    //           functionName: 'owner',
+    //           suspense: true
+    //         });
     return (
         <>
             <BuyTokens counter={counter} add={add}/>
-            <p>Contract Owner: {data}</p>
+            {/* <p>Contract Owner: {data}</p> */}
         </>)
 }
