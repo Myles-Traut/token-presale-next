@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from 'next/image'
-
+import { useAccount } from 'wagmi'
 import Profile from "./Profile";
 
 export default function Navbar() {
+  const { address, isConnected } = useAccount();
     return(
       <header>
         <nav className="flex relative bg-gray-50">
@@ -19,6 +20,9 @@ export default function Navbar() {
             <Link
               href="/buy" className="text-gray-900 px-5 hover:text-indigo-800"
               >Buy</Link>
+            
+            <Link href={`/buy/${address}`} className={isConnected ? "text-gray-900 px-5 hover:text-indigo-800" : "text-gray-200 px-5 hover:text-gray-400"}
+              >User data</Link>
           </div>
           <div className="flex absolute inset-y-0 right-0 space-x-1 my-4 mr-8 w-2/12 items-center">
             <Profile />
