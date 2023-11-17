@@ -1,8 +1,8 @@
 import BuyTokens from "@/components/BuyTokens";
-import TokenBalance from '@/components/TokenBalance';
 import { useAccount, useContractRead } from 'wagmi';
 import { tokenSaleAbi } from "../../abis/TokenPresale"
-import { ReactNode } from 'react';
+import { ReactNode, SetStateAction, useState } from 'react';
+import FetchBalance from "@/components/FetchBalance";
 
 type Args = {
     data: string | number | undefined | ReactNode
@@ -10,34 +10,28 @@ type Args = {
     isLoading: boolean
 }
 
-type Props = {
-    address: `0x${string}` | undefined
-}
-
-// export default function FetchBalance({ address }: Props) {
-    
-//         // THIS WILL FAIL TO RENER CORRECTLY OF USER HAS 0.0001 HUB
-//         // THINK OF FIX!!
-//         return output?.length === 1 ? (<div>{output} HUB</div>) : (<div>{output?.slice(0, -18)} HUB</div>);
-// }
-
 export default function Buy() {
     const { address, isConnected } = useAccount();
 
-    const userBalance = () => {
-        const { data, isError, isLoading }: Args = useContractRead({
-            address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
-            abi: tokenSaleAbi,
-            functionName: 'userHubBalance',
-            args: [address],
-            suspense: true,
-            onSuccess(data) {
-                console.log('Success', data)},
-            });
-            
-            let output = data?.toString();
-            return output;
+    let userAddr: string = '0x0000000000000000000000000000000000000000';
+    if (address){
+        userAddr = address;
     }
+
+    const { data, isError, isLoading }: Args = useContractRead({
+        address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
+        abi: tokenSaleAbi,
+        functionName: 'userHubBalance',
+        args: [userAddr],
+        suspense: true,
+        onSuccess(data) {
+            setBalance(data?.toString())
+            console.log('Success', data)},
+        });
+            
+    let output: string | undefined = data?.toString();
+
+    const [balance, setBalance] = useState(output);
 
     return (
         <>
@@ -49,10 +43,10 @@ export default function Buy() {
             </div>
             <div className="mt-5">
                 {isConnected ? 
-                <h2 className="mt-5 mb-5 text-center text-white text-2xl ">Claimable Hub Token Balance: <TokenBalance address={address} /></h2> :
+                <h2 className="mt-5 mb-5 text-center text-white text-2xl ">Claimable Hub Token Balance: {balance}</h2> :
                 <h2 className="mt-5 mb-5 text-center text-white text-2xl">Please connect Wallet</h2>}
             </div>
-            <BuyTokens address={address} isConnected= {isConnected}/>
+            <BuyTokens address={address} isConnected= {isConnected} setBalance={useContractRead}/>
         </>
     )
 }

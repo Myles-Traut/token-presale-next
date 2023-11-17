@@ -6,13 +6,15 @@ import {
 import { tokenSaleAbi } from "../../abis/TokenPresale"
 
 import { parseEther } from 'viem';
+import { ReactNode } from 'react';
 
 type Props = {
     address: `0x${string}` | undefined,
     isConnected: boolean,
+    setBalance: any
 }
 
-export default function BuyTokens({ address, isConnected }: Props) {
+export default function BuyTokens({ address, isConnected, setBalance }: Props) {
     
     // cd10d20c85e372c8697ae241a34de82d
     // https://api.studio.thegraph.com/query/53386/token-ps-final/version/latest
@@ -43,6 +45,7 @@ export default function BuyTokens({ address, isConnected }: Props) {
                 {isSuccess && (
                     <div className="text-black">
                         Successfully purchased HUB!
+                        {():ReactNode => {setBalance}}
                         <div>
                             <a href={`https://goerli.etherscan.io/tx/${data?.hash}`}>Etherscan</a>
                         </div>
