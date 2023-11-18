@@ -6,7 +6,6 @@ import {
 import { tokenSaleAbi } from "../../abis/TokenPresale"
 
 import { parseEther } from 'viem';
-import { ReactNode } from 'react';
 
 type Props = {
     address: `0x${string}` | undefined,
@@ -15,11 +14,6 @@ type Props = {
 }
 
 export default function BuyTokens({ address, isConnected, setBalance }: Props) {
-    
-    // cd10d20c85e372c8697ae241a34de82d
-    // https://api.studio.thegraph.com/query/53386/token-ps-final/version/latest
-    // const SelectLabel: (label: string) => string = (label) => 
-
     const { config } = usePrepareContractWrite({
         address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
         abi: tokenSaleAbi,
@@ -45,7 +39,7 @@ export default function BuyTokens({ address, isConnected, setBalance }: Props) {
                 {isSuccess && (
                     <div className="text-black">
                         Successfully purchased HUB!
-                        {():ReactNode => {setBalance}}
+                        {() => {setBalance}}
                         <div>
                             <a href={`https://goerli.etherscan.io/tx/${data?.hash}`}>Etherscan</a>
                         </div>

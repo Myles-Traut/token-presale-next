@@ -1,8 +1,7 @@
 import BuyTokens from "@/components/BuyTokens";
 import { useAccount, useContractRead } from 'wagmi';
 import { tokenSaleAbi } from "../../abis/TokenPresale"
-import { ReactNode, SetStateAction, useState } from 'react';
-import FetchBalance from "@/components/FetchBalance";
+import { ReactNode, useState } from 'react';
 
 type Args = {
     data: string | number | undefined | ReactNode
