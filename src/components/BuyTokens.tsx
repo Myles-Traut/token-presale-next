@@ -2,51 +2,49 @@ import {
     usePrepareContractWrite, 
     useContractWrite, 
     useWaitForTransaction, 
-    useContractRead } from 'wagmi';
+    useContractRead,
+    useContractEvent } from 'wagmi';
 
 import { tokenSaleAbi } from "../../abis/TokenPresale";
 
 import { parseEther } from 'viem';
 import { ReactNode } from 'react';
+import { useState } from 'react';
 
 type Props = {
     address: `0x${string}` | undefined,
     isConnected: boolean,
     setBalance: any,
-    previousBalance: ReactNode
-}
-
-type BuyArgs = {
-    buyData: string | number | undefined | ReactNode,
+    previousBalance: number
 }
 
 export default function BuyTokens({ address, isConnected, setBalance, previousBalance }: Props) {
-    console.log(previousBalance);
+    const [bought, setBought] = useState(0);
+
     const { config } = usePrepareContractWrite({
         address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
         abi: tokenSaleAbi,
         functionName: 'buyHub',
         args: [address],
-        value: parseEther('0.002'),
+        value: parseEther('0.001'),
     });
 
-    const { hubQuote }: BuyArgs = useContractRead({
+    useContractEvent({
         address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
         abi: tokenSaleAbi,
-        functionName: 'getHubQuote',
-        args: [parseEther('0.002')],
-        suspense: true,
-        onSuccess(data) {
-            console.log('Success', data)},
-        });
+        eventName: 'HubBought',
+        listener(log) {
+          setBought(log[0].args.hubBought);
+        },
+      })
 
     const { data, write } = useContractWrite(config);
 
     const { isLoading, isSuccess } = useWaitForTransaction({
         hash: data?.hash,
         onSuccess(data) {
-            console.log('Success', (Number(previousBalance) + Number(hubQuote))),
-            setBalance((Number(previousBalance) + Number(hubQuote)).toString());
+            console.log('Tx Success', bought + previousBalance)
+            setBalance((bought + previousBalance).toString());
           },
     });
 
