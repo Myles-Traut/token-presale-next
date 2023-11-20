@@ -43,7 +43,7 @@ export default function Buy() {
                 <h2 className="mt-5 mb-5 text-center text-white text-2xl ">Claimable Hub Token Balance: {balance}</h2> :
                 <h2 className="mt-5 mb-5 text-center text-white text-2xl">Please connect Wallet</h2>}
             </div>
-            <BuyTokens address={userAddr} isConnected= {isConnected} setBalance={setBalance} contractData={data}/>
+            <BuyTokens address={userAddr} isConnected= {isConnected} setBalance={setBalance} previousBalance={data}/>
         </>
     )
 }

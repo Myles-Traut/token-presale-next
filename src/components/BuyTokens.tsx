@@ -13,15 +13,15 @@ type Props = {
     address: `0x${string}` | undefined,
     isConnected: boolean,
     setBalance: any,
-    contractData: ReactNode
+    previousBalance: ReactNode
 }
 
 type BuyArgs = {
     buyData: string | number | undefined | ReactNode,
 }
 
-export default function BuyTokens({ address, isConnected, setBalance, contractData }: Props) {
-    console.log(contractData);
+export default function BuyTokens({ address, isConnected, setBalance, previousBalance }: Props) {
+    console.log(previousBalance);
     const { config } = usePrepareContractWrite({
         address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
         abi: tokenSaleAbi,
@@ -30,7 +30,7 @@ export default function BuyTokens({ address, isConnected, setBalance, contractDa
         value: parseEther('0.002'),
     });
 
-    const { buyData }: BuyArgs = useContractRead({
+    const { hubQuote }: BuyArgs = useContractRead({
         address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
         abi: tokenSaleAbi,
         functionName: 'getHubQuote',
@@ -45,8 +45,8 @@ export default function BuyTokens({ address, isConnected, setBalance, contractDa
     const { isLoading, isSuccess } = useWaitForTransaction({
         hash: data?.hash,
         onSuccess(data) {
-            console.log('Success', (Number(contractData) + Number(buyData))),
-            setBalance((Number(contractData) + Number(buyData)).toString());
+            console.log('Success', (Number(previousBalance) + Number(hubQuote))),
+            setBalance((Number(previousBalance) + Number(hubQuote)).toString());
           },
     });
 
