@@ -12,10 +12,12 @@ type Args = {
 export default function Buy() {
     const { address, isConnected } = useAccount();
 
-    let userAddr: string = '0x0000000000000000000000000000000000000000';
+    let userAddr: `0x${string}` = '0x0000000000000000000000000000000000000000';
     if (address){
         userAddr = address;
     }
+
+    const [balance, setBalance] = useState("0");
 
     const { data, isError, isLoading }: Args = useContractRead({
         address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
@@ -27,10 +29,6 @@ export default function Buy() {
             setBalance(data?.toString())
             console.log('Success', data)},
         });
-            
-    let output: string | undefined = data?.toString();
-
-    const [balance, setBalance] = useState(output);
 
     return (
         <>
@@ -45,7 +43,7 @@ export default function Buy() {
                 <h2 className="mt-5 mb-5 text-center text-white text-2xl ">Claimable Hub Token Balance: {balance}</h2> :
                 <h2 className="mt-5 mb-5 text-center text-white text-2xl">Please connect Wallet</h2>}
             </div>
-            <BuyTokens address={address} isConnected= {isConnected} setBalance={useContractRead}/>
+            <BuyTokens address={userAddr} isConnected= {isConnected} setBalance={setBalance} contractData={data}/>
         </>
     )
 }

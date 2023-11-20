@@ -1,30 +1,53 @@
 import {
     usePrepareContractWrite, 
     useContractWrite, 
-    useWaitForTransaction } from 'wagmi';
+    useWaitForTransaction, 
+    useContractRead } from 'wagmi';
 
-import { tokenSaleAbi } from "../../abis/TokenPresale"
+import { tokenSaleAbi } from "../../abis/TokenPresale";
 
 import { parseEther } from 'viem';
+import { ReactNode } from 'react';
 
 type Props = {
     address: `0x${string}` | undefined,
     isConnected: boolean,
-    setBalance: any
+    setBalance: any,
+    contractData: ReactNode
 }
 
-export default function BuyTokens({ address, isConnected, setBalance }: Props) {
+type BuyArgs = {
+    buyData: string | number | undefined | ReactNode,
+}
+
+export default function BuyTokens({ address, isConnected, setBalance, contractData }: Props) {
+    console.log(contractData);
     const { config } = usePrepareContractWrite({
         address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
         abi: tokenSaleAbi,
         functionName: 'buyHub',
         args: [address],
-        value: parseEther('0.001'),
+        value: parseEther('0.002'),
     });
+
+    const { buyData }: BuyArgs = useContractRead({
+        address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
+        abi: tokenSaleAbi,
+        functionName: 'getHubQuote',
+        args: [parseEther('0.002')],
+        suspense: true,
+        onSuccess(data) {
+            console.log('Success', data)},
+        });
+
     const { data, write } = useContractWrite(config);
 
     const { isLoading, isSuccess } = useWaitForTransaction({
         hash: data?.hash,
+        onSuccess(data) {
+            console.log('Success', (Number(contractData) + Number(buyData))),
+            setBalance((Number(contractData) + Number(buyData)).toString());
+          },
     });
 
     return (
@@ -39,7 +62,6 @@ export default function BuyTokens({ address, isConnected, setBalance }: Props) {
                 {isSuccess && (
                     <div className="text-black">
                         Successfully purchased HUB!
-                        {() => {setBalance}}
                         <div>
                             <a href={`https://goerli.etherscan.io/tx/${data?.hash}`}>Etherscan</a>
                         </div>
