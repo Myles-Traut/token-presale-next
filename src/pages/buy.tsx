@@ -4,7 +4,7 @@ import { tokenSaleAbi } from "../../abis/TokenPresale"
 import { ReactNode, useState } from 'react';
 
 type Args = {
-    data: string | number | undefined | ReactNode
+    data: number | undefined
     isError: boolean
     isLoading: boolean
 }
