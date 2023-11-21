@@ -19,7 +19,7 @@ export default function Buy() {
 
     const [balance, setBalance] = useState("0");
 
-    const { data, isError, isLoading }: Args = useContractRead({
+    let { data, isError, isLoading }: Args = useContractRead({
         address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
         abi: tokenSaleAbi,
         functionName: 'userHubBalance',
@@ -29,6 +29,10 @@ export default function Buy() {
             setBalance(data?.toString())
             console.log('Success', data)},
         });
+    
+    if(data === undefined){
+        data = 0;
+    }
 
     return (
         <>

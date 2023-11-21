@@ -15,7 +15,7 @@ type Props = {
     address: `0x${string}` | undefined,
     isConnected: boolean,
     setBalance: any,
-    previousBalance: number | undefined
+    previousBalance: number
 }
 
 export default function BuyTokens({ address, isConnected, setBalance, previousBalance }: Props) {
