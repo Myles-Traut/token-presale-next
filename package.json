@@ -12,10 +12,12 @@
   "dependencies": {
     "@apollo/client": "^3.8.7",
     "@tanstack/react-query": "^4.36.1",
+    "abi-decoder": "^2.4.0",
     "graphql": "^16.8.1",
     "next": "14.0.2",
     "react": "^18",
     "react-dom": "^18",
+    "use-debounce": "^10.0.0",
     "viem": "^1.19.1",
     "wagmi": "^1.4.6"
   },

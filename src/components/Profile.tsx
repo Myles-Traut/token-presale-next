@@ -1,5 +1,6 @@
-import { useAccount, useConnect, useDisconnect } from 'wagmi'
-import { InjectedConnector } from 'wagmi/connectors/injected'
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { InjectedConnector } from 'wagmi/connectors/injected';
+import { useRouter } from 'next/router';
  
 export default function Profile() {
   const { isConnected } = useAccount();
@@ -7,6 +8,7 @@ export default function Profile() {
     connector: new InjectedConnector(),
   });
   const { disconnect } = useDisconnect();
+  const router = useRouter();
  
     return (
       <>
@@ -14,7 +16,7 @@ export default function Profile() {
           {isConnected ? 
           <button
           className="w-full h-12 px-6 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
-          onClick={() => disconnect()}>Disconnect</button> :
+          onClick={() => {disconnect(); router.push('/')}}>Disconnect</button> :
           <button 
           className="w-full h-12 px-6 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
           onClick={() => connect()}>Connect Wallet</button>
