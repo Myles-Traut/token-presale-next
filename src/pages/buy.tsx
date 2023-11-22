@@ -4,7 +4,7 @@ import { tokenSaleAbi } from "../../abis/TokenPresale"
 import { ReactNode, useState } from 'react';
 
 type Args = {
-    data: number | undefined
+    data: bigint | undefined
     isError: boolean
     isLoading: boolean
 }
@@ -31,7 +31,7 @@ export default function Buy() {
         });
     
     if(data === undefined){
-        data = 0;
+        data = 0n;
     }
 
     return (

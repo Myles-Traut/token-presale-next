@@ -10,7 +10,6 @@ export default function Home() {
   return (
     <main className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}>
       <p className='items-center'>Home</p>
-      <Link href={`/buy/${address}`}>User data</Link>
     </main>
   )
 }

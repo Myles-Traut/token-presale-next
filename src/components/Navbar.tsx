@@ -5,6 +5,7 @@ import Profile from "./Profile";
 
 export default function Navbar() {
   const { address, isConnected } = useAccount();
+  
     return(
       <header>
         <nav className="flex relative bg-gray-50">
@@ -21,7 +22,7 @@ export default function Navbar() {
               hidden={ !isConnected } href="/buy" className="text-gray-900 px-5 hover:text-indigo-800"
               >Buy</Link>
             
-            <Link hidden={ !isConnected } href={`/buy/${address}`} className={"text-gray-900 px-5 hover:text-indigo-800"}
+            <Link hidden={ !isConnected } href={`/user/${address}`} className={"text-gray-900 px-5 hover:text-indigo-800"}
               >User data</Link>
           </div>
           <div className="flex absolute inset-y-0 right-0 space-x-1 my-4 mr-8 w-2/12 items-center">

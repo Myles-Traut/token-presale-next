@@ -3,6 +3,7 @@ import { readContract } from '@wagmi/core';
 import { tokenSaleAbi } from "../../../abis/TokenPresale"
 import { useContractRead } from 'wagmi';
 import { ReactNode } from 'react';
+import { useAccount } from 'wagmi';
 
 type Args = {
   data: string | number | undefined | ReactNode
@@ -10,13 +11,15 @@ type Args = {
   isLoading: boolean
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: any) {
+  console.log(context.params);
+  const { address } = context.params;
 
   const APIURL = 'https://api.studio.thegraph.com/query/53386/token-ps-final/0.0.1'
 
   const tokensQuery = `
     query {
-      hubBought(id: "0xe6ba5Bb7238e7C38C7c5Ff5F0dA2223C50A466f8") {
+      hubBought(id: "${address}") {
           buyer
           ethSpent
           hubBought
@@ -30,7 +33,7 @@ export async function getServerSideProps() {
     cache: new InMemoryCache(),
   });
 
-  const userData = await client
+  let userData = await client
     .query({
       query: gql(tokensQuery),
     })
@@ -38,6 +41,10 @@ export async function getServerSideProps() {
     .catch((err) => {
       console.log('Error fetching data: ', err)
     })
+
+  if(userData === undefined){
+    userData = null;
+  }
 
   // let result: number = userData?.toString() ?? undefined
   return {
