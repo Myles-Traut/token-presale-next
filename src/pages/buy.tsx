@@ -28,7 +28,7 @@ export default function Buy() {
         enabled: true,
         suspense: true,
         onSuccess(data) {
-            setBalance(data?.toString())
+            setBalance(data?.toString().slice(0, -18))
             console.log('Success', data)},
         });
     

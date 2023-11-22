@@ -18,7 +18,7 @@ export default function PurchaseTokenForm({ userAddress, isConnected, setBalance
   
     // const debouncedAmount: [string, DebouncedState<(value: string) => void>] = useDebounce(amount, 500);
 
-    console.log(amount);
+    console.log(amount.slice(-18));
 
     const {
         config, 
@@ -32,7 +32,7 @@ export default function PurchaseTokenForm({ userAddress, isConnected, setBalance
         enabled: true,
         value: parseEther(amount),
         onSuccess(data){
-            setQuote(data.result.toString());
+            setQuote(data.result.toString().slice(0, -18));
         }
     });
 
@@ -63,7 +63,7 @@ export default function PurchaseTokenForm({ userAddress, isConnected, setBalance
         {hash: data?.hash,
         onSuccess(data) {
                 // console.log('Tx Success', bought + previousBalance)
-                setBalance((bought + previousBalance).toString());
+                setBalance((bought + previousBalance).toString().slice(0, -18));
               },}
     )
 

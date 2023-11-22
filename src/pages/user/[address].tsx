@@ -33,36 +33,62 @@ export async function getServerSideProps(context: any) {
     cache: new InMemoryCache(),
   });
 
-  let userData = await client
+  let amountBought: any;
+  let amountSpent: any;
+  let userId: any;
+  let buyer: any;
+
+  await client
     .query({
       query: gql(tokensQuery),
     })
-    .then((data) => (data.data.hubBought.hubBought))
+    .then((data) => (
+      amountBought = data.data.hubBought.hubBought, 
+      amountSpent = data.data.hubBought.ethSpent,
+      userId = data.data.hubBought.id,
+      buyer = data.data.hubBought.buyer
+      ))
     .catch((err) => {
       console.log('Error fetching data: ', err)
-    })
+  })
 
-  if(userData === undefined){
-    userData = null;
+  if(amountBought === undefined){
+    amountBought = "No Info";
+  }
+
+  if(amountSpent === undefined){
+    amountSpent = "No Info";
+  }
+
+  if(userId === undefined){
+    userId = "No Info";
+  }
+
+  if(buyer === undefined){
+    buyer = "No Info";
   }
 
   // let result: number = userData?.toString() ?? undefined
   return {
-      props: { userData }, // will be passed to the page component as props
+      props: { amountBought, amountSpent, userId, buyer }, // will be passed to the page component as props
   }
 }
 
 type Props = {
   result : ReactNode,
-  userData: any
+  amountBought: any,
+  amountSpent: any,
+  userId: any,
+  buyer: any,
 }
-export default function UserData({userData}: Props) {
-  console.log(userData);
-  
+export default function UserData({amountBought, amountSpent, userId, buyer}: Props) {
     return (
         <>
             <h2>User Data:</h2>
-            <p>Just Bought:{userData}</p>
+            <p>HUB Bought:   {amountBought} HUB</p>
+            <div>ETH Spent:   {amountSpent}</div>
+            <div>UserId:  {userId}</div>
+            <div>Buyer:   {buyer}</div>
         </>
     )
 }

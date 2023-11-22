@@ -31,9 +31,9 @@ export default function Home() {
       suspense: true,
       enabled: Boolean(address),
       onSuccess(data) {
-          setBalance(data?.toString())
-          console.log('Success', data)},
-      });
+          setBalance(data?.toString().slice(0, -18));
+      },
+  });
   
   if(data === undefined){
       data = 0n;
@@ -49,7 +49,7 @@ export default function Home() {
     <div className="flex realtive flex-col items-center justify-between mt-1 mb-5">
       <div className="flex absolute mt-5 mb-8 bg-blue-500 w-screen justify-center">
           {isConnected ? 
-          <h2 className="text-center text-white text-2xl">Claimable Hub Token Balance: {balance}</h2> :
+          <h2 className="text-center text-white text-2xl">Claimable HUB Balance: {balance}</h2> :
           <h2 className="text-center text-white text-2xl">Please connect Wallet</h2>}
       </div>
     </div>
