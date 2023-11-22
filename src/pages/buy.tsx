@@ -1,4 +1,3 @@
-import BuyTokens from "@/components/BuyTokens";
 import { useAccount, useContractRead } from 'wagmi';
 import { tokenSaleAbi } from "../../abis/TokenPresale"
 import { ReactNode, useState } from 'react';
