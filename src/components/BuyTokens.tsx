@@ -20,6 +20,10 @@ type Props = {
 export default function BuyTokens({ address, isConnected, setBalance, previousBalance }: Props) {
     const [bought, setBought] = useState(0n);
 
+    if(address === undefined){
+        address = '0x0000000000000000000000000000000000000000'
+    }
+
     const { config, error, isError } = usePrepareContractWrite({
         address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
         abi: tokenSaleAbi,
@@ -42,7 +46,11 @@ export default function BuyTokens({ address, isConnected, setBalance, previousBa
         abi: tokenSaleAbi,
         eventName: 'HubBought',
         listener(log) {
-          setBought(log[0].args.hubBought);
+            if(log[0].args.hubBought === undefined){
+                setBought(0n);
+            }else{
+                setBought(log[0].args.hubBought);}
+          
         },
       })
 
@@ -75,7 +83,7 @@ export default function BuyTokens({ address, isConnected, setBalance, previousBa
                         </div>
                     </div>
                 )}
-                {isError && <div className='flex absolute bg-green-700 mt-8 text-black'>Error: insufficient funds for gas * price + value</div>}
+                {isError && (<div className='flex absolute bg-green-700 mt-8 text-black'>Error: insufficient funds for gas * price + value</div>)}
                 </div>
             </div>
         </>
