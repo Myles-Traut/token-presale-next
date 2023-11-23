@@ -29,7 +29,7 @@ export default function Buy() {
         enabled: true,
         suspense: true,
         onSuccess(data) {
-            setBalance(dn.format([data, 18],{ digits: 4, trailingZeros: true }))
+            setBalance(dn.format([data, 18]))
             console.log('Success', data)},
         });
     

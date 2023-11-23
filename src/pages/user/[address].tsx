@@ -43,27 +43,48 @@ export async function getServerSideProps(context: any) {
 }
 
 type Props = {
-  userData: void | ApolloQueryResult<any>;
+  userData: any;
 }
 export default function UserData({ userData }: Props) {
     let amountBought: string = userData.data.hubBought?.hubBought;
     let bigAmount: bigint;
     let parsedAmount:string
+
+    let amountSpent: string = userData.data.hubBought?.ethSpent;
+    let bigAmountSpent: bigint;
+    let parsedAmountSpent:string
+
+    let id: string = userData.data.hubBought?.id;
+    let buyer: string = userData.data.hubBought?.buyer;
     
     if(amountBought !== undefined){
       bigAmount = BigInt(amountBought);
-      parsedAmount= dn.format([bigAmount, 18], { digits: 4, trailingZeros: true });
+      parsedAmount= dn.format([bigAmount, 18]);
     } else {
       parsedAmount = "no Data";
     }
+
+    if(amountSpent !== undefined){
+      bigAmountSpent = BigInt(amountSpent);
+      parsedAmountSpent= dn.format([bigAmountSpent, 18]);
+    } else {
+      parsedAmountSpent = "no Data";
+    }
+
+    if(id === undefined){
+      id = "No Data";
+    }
+    if(buyer === undefined) {
+      buyer = "No Data";
+    } 
 
     return (
         <>
             <h2>User Data:</h2>
             <p>HUB Bought:   {parsedAmount} HUB</p>
-            <div>ETH Spent:   {}</div>
-            <div>UserId:  {}</div>
-            <div>Buyer:   {}</div>
+            <div>ETH Spent:   {parsedAmountSpent} ETH</div>
+            <div>UserId:  {id}</div>
+            <div>Buyer:   {buyer}</div>
         </>
     )
 }

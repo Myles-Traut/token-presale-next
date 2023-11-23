@@ -32,7 +32,7 @@ export default function Home() {
       suspense: true,
       enabled: Boolean(address),
       onSuccess(data) {
-          setBalance(dn.format([data, 18],{ digits: 4, trailingZeros: true }));
+          setBalance(dn.format([data, 18]));
       },
   });
 

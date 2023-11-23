@@ -33,7 +33,7 @@ export default function PurchaseTokenForm({ userAddress, isConnected, setBalance
         enabled: true,
         value: parseEther(amount),
         onSuccess(data: any){
-            setQuote(dn.format([data.result, 18],{ digits: 4, trailingZeros: true }));
+            setQuote(dn.format([data.result, 18]));
         }
     });
 
@@ -43,7 +43,7 @@ export default function PurchaseTokenForm({ userAddress, isConnected, setBalance
         address: '0xD055B32fd3136F1dCA638Cd8f4B2eAF4A10abAb3',
         abi: tokenSaleAbi,
         eventName: 'HubBought',
-        listener(log) {
+        listener(log: any) {
             if(log[0].args.hubBought === undefined){
                 setBought(0n);
             }else{
