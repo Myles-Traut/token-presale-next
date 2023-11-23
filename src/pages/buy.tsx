@@ -3,6 +3,7 @@ import { useAccount, useContractRead } from 'wagmi';
 import { tokenSaleAbi } from "../../abis/TokenPresale"
 import { ReactNode, useState } from 'react';
 import PurchaseTokenForm from "@/components/PurchaseTokenForm";
+import * as dn from "dnum";
 
 type Args = {
     data: bigint | undefined
@@ -28,7 +29,7 @@ export default function Buy() {
         enabled: true,
         suspense: true,
         onSuccess(data) {
-            setBalance(data?.toString().slice(0, -18))
+            setBalance(dn.format([data, 18],{ digits: 4, trailingZeros: true }))
             console.log('Success', data)},
         });
     

@@ -3,6 +3,7 @@ import { usePrepareContractWrite, useContractWrite, useWaitForTransaction, useCo
 import { useDebounce, DebouncedState } from 'use-Debounce'
 import { tokenSaleAbi } from "../../abis/TokenPresale";
 import { parseEther } from 'viem';
+import * as dn from "dnum";
 
 type Props = {
     userAddress: `0x${string}`,
@@ -31,16 +32,10 @@ export default function PurchaseTokenForm({ userAddress, isConnected, setBalance
         args: [userAddress],
         enabled: true,
         value: parseEther(amount),
-        onSuccess(data){
-            setQuote(data.result.toString().slice(0, -18));
+        onSuccess(data: any){
+            setQuote(dn.format([data.result, 18],{ digits: 4, trailingZeros: true }));
         }
     });
-
-    // if(config === undefined){
-    //     quote = "0";
-    // } else {
-    //     quote = config.result?.toString();
-    // }
 
     console.log(config.result);
 
@@ -52,8 +47,8 @@ export default function PurchaseTokenForm({ userAddress, isConnected, setBalance
             if(log[0].args.hubBought === undefined){
                 setBought(0n);
             }else{
-                setBought(log[0].args.hubBought);}
-          
+                setBought(log[0].args.hubBought);
+            }  
         },
       })
 
@@ -62,8 +57,9 @@ export default function PurchaseTokenForm({ userAddress, isConnected, setBalance
     const { isLoading, isSuccess } = useWaitForTransaction(
         {hash: data?.hash,
         onSuccess(data) {
+                let total: bigint = bought + previousBalance;
                 // console.log('Tx Success', bought + previousBalance)
-                setBalance((bought + previousBalance).toString().slice(0, -18));
+                setBalance(dn.format([total, 18], { digits: 4, trailingZeros: true }));
               },}
     )
 

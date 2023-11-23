@@ -3,7 +3,8 @@ import { Inter } from 'next/font/google'
 import PurchaseTokenForm from '@/components/PurchaseTokenForm'
 import { useAccount, useContractRead } from 'wagmi';
 import { useState } from 'react';
-import { tokenSaleAbi } from "../../abis/TokenPresale"
+import { tokenSaleAbi } from "../../abis/TokenPresale";
+import * as dn from "dnum";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -31,9 +32,11 @@ export default function Home() {
       suspense: true,
       enabled: Boolean(address),
       onSuccess(data) {
-          setBalance(data?.toString().slice(0, -18));
+          setBalance(dn.format([data, 18],{ digits: 4, trailingZeros: true }));
       },
   });
+
+  console.log(balance);
   
   if(data === undefined){
       data = 0n;
