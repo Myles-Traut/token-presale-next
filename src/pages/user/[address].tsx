@@ -1,15 +1,6 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client'
-import { readContract } from '@wagmi/core';
-import { tokenSaleAbi } from "../../../abis/TokenPresale"
-import { useContractRead } from 'wagmi';
+import { ApolloClient, ApolloQueryResult, InMemoryCache, gql } from '@apollo/client'
 import { ReactNode } from 'react';
-import { useAccount } from 'wagmi';
-
-type Args = {
-  data: string | number | undefined | ReactNode
-  isError: boolean
-  isLoading: boolean
-}
+import * as dn from "dnum";
 
 export async function getServerSideProps(context: any) {
   console.log(context.params);
@@ -27,68 +18,52 @@ export async function getServerSideProps(context: any) {
     }
   }
   `
-
   const client = new ApolloClient({
     uri: APIURL,
     cache: new InMemoryCache(),
   });
 
-  let amountBought: any;
-  let amountSpent: any;
-  let userId: any;
-  let buyer: any;
-
-  await client
+  const userData = await client
     .query({
       query: gql(tokensQuery),
     })
-    .then((data) => (
-      amountBought = data.data.hubBought.hubBought, 
-      amountSpent = data.data.hubBought.ethSpent,
-      userId = data.data.hubBought.id,
-      buyer = data.data.hubBought.buyer
-      ))
+    .then((data) => {return data})
+      // amountBought = data.data.hubBought.hubBought, 
+      // amountSpent = data.data.hubBought.ethSpent,
+      // userId = data.data.hubBought.id,
+      // buyer = data.data.hubBought.buyer
+
     .catch((err) => {
       console.log('Error fetching data: ', err)
-  })
+  });
 
-  if(amountBought === undefined){
-    amountBought = "No Info";
-  }
-
-  if(amountSpent === undefined){
-    amountSpent = "No Info";
-  }
-
-  if(userId === undefined){
-    userId = "No Info";
-  }
-
-  if(buyer === undefined){
-    buyer = "No Info";
-  }
-
-  // let result: number = userData?.toString() ?? undefined
   return {
-      props: { amountBought, amountSpent, userId, buyer }, // will be passed to the page component as props
+      props: { userData }, // will be passed to the page component as props
   }
 }
 
 type Props = {
-  result : ReactNode,
-  amountBought: any,
-  amountSpent: any,
-  userId: any,
-  buyer: any,
+  userData: void | ApolloQueryResult<any>;
 }
-export default function UserData({amountBought, amountSpent, userId, buyer}: Props) {
+export default function UserData({ userData }: Props) {
+    let amountBought: string = userData.data.hubBought?.hubBought;
+    let bigAmount: bigint;
+    let parsedAmount:string
+    
+    if(amountBought !== undefined){
+      bigAmount = BigInt(amountBought);
+      parsedAmount= dn.format([bigAmount, 18], { digits: 4, trailingZeros: true });
+    } else {
+      parsedAmount = "no Data";
+    }
+
     return (
         <>
             <h2>User Data:</h2>
-            <p>HUB Bought:   {amountBought} HUB</p>
-            <div>ETH Spent:   {amountSpent}</div>
-            <div>UserId:  {userId}</div>
-            <div>Buyer:   {buyer}</div>
+            <p>HUB Bought:   {parsedAmount} HUB</p>
+            <div>ETH Spent:   {}</div>
+            <div>UserId:  {}</div>
+            <div>Buyer:   {}</div>
         </>
     )
 }
